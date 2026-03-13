@@ -69,7 +69,7 @@ fi
 
 # Edit today's file
 if [[ "$1" == "-e" ]]; then
-  nvim $statsFile
+  $EDITOR $statsFile
   exit 0
 fi
 
