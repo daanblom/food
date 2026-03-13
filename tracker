@@ -1,0 +1,216 @@
+#!/bin/bash
+
+today=$(date '+%Y-%m-%d')
+
+source ./.env
+
+mkdir -p "$timelineDir"
+
+if [[ ! -f "$statsFile" ]]; then
+    printf "Food,Amount,Calories,Protein,Carbs,Fats\n" > "$statsFile"
+fi
+
+# Color helper
+colorize() {
+    pct=$1
+
+    if (( $(echo "$pct < 50" | bc -l) )); then
+        color=31
+    elif (( $(echo "$pct < 90" | bc -l) )); then
+        color=33
+    else
+        color=32
+    fi
+
+    printf "\033[%sm(%.2f%%)\033[0m" "$color" "$pct"
+}
+
+# Progress bar
+progressBar() {
+    pct=$1
+    width=20
+
+    # Keep visual bar capped at 100%
+    displayPct=$pct
+    if (( $(echo "$displayPct > 100" | bc -l) )); then
+        displayPct=100
+    fi
+
+    filled=$(awk "BEGIN {printf \"%d\", ($displayPct/100)*$width}")
+    empty=$((width-filled))
+
+    bar=$(printf "%${filled}s" | tr " " "-")
+    space=$(printf "%${empty}s")
+
+    if (( $(echo "$pct < 50" | bc -l) )); then
+        color=31
+    elif (( $(echo "$pct < 90" | bc -l) )); then
+        color=33
+    else
+        color=32
+    fi
+
+    printf "\033[%sm[%s%s] %.0f%%\033[0m" "$color" "$bar" "$space" "$pct"
+}
+
+# Add entry
+if [[ "$1" == "-a" ]]; then
+
+if [[ $# -ne 7 ]]; then
+echo 'Usage: food -a "Food name" amount calories protein carbs fats'
+exit 1
+fi
+
+echo "$2,$3,$4,$5,$6,$7" >> "$statsFile"
+
+echo "Added: $2 ($3)"
+exit 0
+fi
+
+# Edit today's file
+if [[ "$1" == "-e" ]]; then
+  nvim $statsFile
+  exit 0
+fi
+
+# List today's file
+if [[ "$1" == "-l" ]]; then
+  sed 's/ //g' $statsFile | csvlens
+  exit 0
+fi
+
+# Insert food from list
+if [[ "$1" == "-i" ]]; then
+  local entry="$(cat .csv/foods.csv |sed '/^$/d' | sed '/^#/d' | fzf)"
+  exit 0
+fi
+
+calcWater() {
+    awk -F',' '
+    NR > 1 {
+        food = $1
+        amount = $2
+
+        gsub(/^ +| +$/, "", food)
+        gsub(/^ +| +$/, "", amount)
+
+        if (tolower(food) == "water") {
+            gsub(/ml/i, "", amount)
+            gsub(/ /, "", amount)
+            total += amount
+        }
+    }
+    END {
+        printf "%.0f\n", total
+    }
+    ' "$statsFile"
+}
+
+# Calculate totals
+read -r totalCalories totalProtein totalCarbs totalFats < <(
+awk -F',' '
+NR>1{
+c+=$3
+p+=$4
+cb+=$5
+f+=$6
+}
+END{
+printf "%.1f %.1f %.1f %.1f\n",c,p,cb,f
+}
+' "$statsFile"
+)
+
+totalWater=$(calcWater)
+pctWater=$(awk "BEGIN {printf \"%.2f\",($totalWater*100)/$waterGoal}")
+remWater=$(awk "BEGIN {printf \"%.0f\",$waterGoal-$totalWater}")
+
+# Percentages
+pctCalories=$(awk "BEGIN {printf \"%.2f\",($totalCalories*100)/$caloriesGoal}")
+pctProtein=$(awk "BEGIN {printf \"%.2f\",($totalProtein*100)/$proteinGoal}")
+pctCarbs=$(awk "BEGIN {printf \"%.2f\",($totalCarbs*100)/$carbsGoal}")
+pctFats=$(awk "BEGIN {printf \"%.2f\",($totalFats*100)/$fatsGoal}")
+
+# Remaining
+remCalories=$(awk "BEGIN {printf \"%.1f\",$caloriesGoal-$totalCalories}")
+remProtein=$(awk "BEGIN {printf \"%.1f\",$proteinGoal-$totalProtein}")
+remCarbs=$(awk "BEGIN {printf \"%.1f\",$carbsGoal-$totalCarbs}")
+remFats=$(awk "BEGIN {printf \"%.1f\",$fatsGoal-$totalFats}")
+
+# Output functions
+showTotals() {
+
+printf "Calories: %.1f / %s %s\n" \
+"$totalCalories" "$caloriesGoal" "$(colorize "$pctCalories")"
+
+printf "Protein : %.1f / %s %s\n" \
+"$totalProtein" "$proteinGoal" "$(colorize "$pctProtein")"
+
+printf "Carbs   : %.1f / %s %s\n" \
+"$totalCarbs" "$carbsGoal" "$(colorize "$pctCarbs")"
+
+printf "Fats    : %.1f / %s %s\n" \
+"$totalFats" "$fatsGoal" "$(colorize "$pctFats")"
+
+printf "Water   : %s / %sml %s\n" \
+"$totalWater" "$waterGoal" "$(colorize "$pctWater")"
+
+}
+
+showBars() {
+
+printf "Calories "
+progressBar "$pctCalories"
+echo
+
+printf "Protein  "
+progressBar "$pctProtein"
+echo
+
+printf "Carbs    "
+progressBar "$pctCarbs"
+echo
+
+printf "Fats     "
+progressBar "$pctFats"
+echo
+
+printf "Water    "
+progressBar "$pctWater"
+echo
+
+}
+
+showRemaining() {
+
+echo "Remaining:"
+printf "Calories: %s\n" "$remCalories"
+printf "Protein : %sg\n" "$remProtein"
+printf "Carbs   : %sg\n" "$remCarbs"
+printf "Fats    : %sg\n" "$remFats"
+printf "Water   : %sml\n" "$remWater"
+
+}
+
+# Help menu
+
+showHelp () {
+  echo"
+Usage: $0
+  "
+}
+
+# Flags
+case "$1" in
+
+-r) showRemaining ;;
+
+-f) showTotals && echo && showRemaining ;;
+
+-b) showBars ;;
+
+*) showTotals ;;
+
+-h) showHelp ;;
+
+esac
