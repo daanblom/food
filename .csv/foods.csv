@@ -1,0 +1,145 @@
+Food,Amount,Calories,Protein (g),Carbs (g),Fat (g)
+# CARB BASES
+White rice (uncooked),100g,360,7,78,0.6
+White rice (cooked),100g,130,2,28,0.3
+Brown rice (cooked),100g,112,2.5,23,0.9
+Jasmine rice (cooked),100g,130,2.5,28,0.3
+Basmati rice (cooked),100g,120,3,25,0.4
+Pasta (uncooked),100g,360,12,72,1.5
+Pasta (cooked),100g,150,5,30,1
+Whole wheat pasta (cooked),100g,140,6,27,1
+Potatoes,100g,75,2,17,0.1
+Sweet potato,100g,85,1.5,20,0.1
+Sourdough bread,100g,240,8,45,2
+Whole grain bread,100g,250,9,43,4
+White bread,100g,265,9,49,3
+Bagel,1 (~100g),270,10,53,1.5
+Tortilla wrap (~70g),1,220,6,35,5
+Couscous (dry),100g,370,13,77,0.6
+Quinoa (dry),100g,370,14,64,6
+Quinoa (cooked),100g,120,4,21,2
+Bulgur (dry),100g,340,12,75,1.5
+Noodles (dry),100g,350,10,70,1.5
+Rice noodles (cooked),100g,110,2,25,0.2
+Oats (dry),100g,380,13,68,7
+Granola,100g,450,10,64,20
+Corn (cooked),100g,95,3,21,1.5
+Polenta (cooked),100g,70,2,15,0.5
+
+# VEGETABLES
+Broccoli,100g,35,3,7,0.4
+Spinach,100g,23,3,4,0.4
+Kale,100g,35,3,7,1
+Arugula,100g,25,2.5,4,0.7
+Lettuce,100g,15,1.5,3,0.2
+Cucumber,100g,15,0.7,4,0.1
+Tomato,100g,18,1,4,0.2
+Cherry tomatoes,100g,20,1,5,0.2
+Bell pepper,100g,30,1,6,0.3
+Zucchini,100g,17,1.2,3,0.3
+Eggplant,100g,25,1,6,0.2
+Carrots,100g,40,1,10,0.2
+Red onion,100g,40,1,9,0.1
+Garlic,100g,150,6,33,0.5
+Mushrooms,100g,22,3,3,0.3
+Green beans,100g,30,2,7,0.2
+Asparagus,100g,20,2,4,0.2
+Brussels sprouts,100g,43,3.5,9,0.5
+Cauliflower,100g,25,2,5,0.3
+Cabbage,100g,25,1.3,6,0.1
+Beetroot,100g,43,1.6,10,0.2
+Pumpkin,100g,26,1,7,0.1
+Butternut squash,100g,45,1,12,0.1
+Peas (green),100g,80,5,14,0.4
+Leek,100g,60,1.5,14,0.3
+Celery,100g,16,0.7,3,0.2
+Radish,100g,16,0.7,3,0.1
+Sauerkraut,100g,20,1,4,0.1
+
+# FRUIT
+Banana,100g,90,1,23,0.3
+Banana (medium ~120g),1,110,1,27,0.4
+Blueberries,100g,57,1,14,0.3
+Strawberries,100g,32,1,8,0.3
+Raspberries,100g,52,1,12,0.7
+Blackberries,100g,43,1.5,10,0.5
+Mango,100g,60,1,15,0.4
+Pineapple,100g,50,0.5,13,0.1
+Grapes,100g,70,0.6,18,0.2
+Apple,100g,52,0.3,14,0.2
+Pear,100g,57,0.4,15,0.1
+Orange,100g,47,1,12,0.1
+Kiwi,100g,61,1,15,0.5
+Pomegranate,100g,83,1.5,19,1.2
+Watermelon,100g,30,0.6,8,0.2
+Avocado,100g,160,2,9,15
+Peach,100g,39,1,10,0.3
+Plum,100g,46,0.7,11,0.3
+Cherries,100g,63,1,16,0.2
+Dates (dried),100g,280,2,75,0.2
+Raisins,100g,300,3,79,0.5
+
+# MEAT & FISH
+Chicken thigh (raw),100g,210,18,0,15
+Chicken breast,100g,165,31,0,3.5
+Turkey breast,100g,135,29,0,1
+Beef mince (15% fat),100g,250,26,0,17
+Lean beef mince (5%),100g,140,21,0,5
+Ribeye steak,100g,290,24,0,22
+Sirloin steak,100g,210,26,0,12
+Pork shoulder,100g,260,24,0,21
+Pork loin,100g,190,27,0,9
+Bacon,100g,540,37,1,42
+Salmon,100g,210,20,0,13
+Mackerel,100g,230,20,0,15
+Tuna (canned in water),100g,110,24,0,1
+Shrimp,100g,100,24,0,1
+Eggs,1 large,70,6,0.5,5
+Egg whites,100g,50,11,1,0
+
+# DAIRY
+Greek yogurt (10%),100g,120,6,4,10
+Greek yogurt (0–2%),100g,60,10,3,0.5
+Skyr,100g,60,11,4,0.2
+Cottage cheese,100g,100,11,3,4
+Ricotta,100g,170,11,3,13
+Mozzarella,100g,280,28,3,17
+Parmesan,100g,430,36,4,29
+Cheddar,100g,400,25,1,33
+Milk (whole),250ml,150,8,12,8
+Milk (semi-skimmed),250ml,120,8,12,4
+Milk (skim),250ml,85,8,12,0
+
+# PLANT PROTEIN
+Lentils (dry),100g,350,25,60,1
+Lentils (cooked),100g,115,9,20,0.4
+Chickpeas (cooked),100g,160,9,27,3
+Black beans (cooked),100g,130,9,23,0.5
+Kidney beans (cooked),100g,125,8.5,22,0.5
+Edamame,100g,120,11,10,5
+Tofu,100g,120,13,3,7
+Tempeh,100g,190,20,9,11
+Seitan,100g,120,25,4,2
+
+# FATS & CALORIE BOOSTERS
+Olive oil,1 tbsp (15g),120,0,0,14
+Butter,10g,75,0,0,8
+Peanut butter,1 tbsp (16g),95,4,3,8
+Almond butter,1 tbsp,100,3,3,9
+Nuts (mixed),30g,180,5,6,15
+Almonds,30g,175,6,6,15
+Walnuts,30g,200,5,4,20
+Chia seeds,30g,150,5,12,9
+Flax seeds,30g,160,5,8,12
+Chili oil,1 tbsp,120,0,0,14
+Mayo,1 tbsp,100,0,0,11
+Pesto,1 tbsp,90,1,2,9
+Hummus,50g,150,4,12,9
+
+# SNACKS
+Dark chocolate (70–85%),30g,170,2,13,12
+Milk chocolate,30g,160,2,18,9
+Protein bar,1,200,20,20,7
+Trail mix,50g,250,7,20,18
+Popcorn (air popped),30g,120,4,24,1
+Cheese + bread (avg),1 serving,350,15,30,15

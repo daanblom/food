@@ -1,0 +1,6 @@
+#!/bin/bash
+
+path="/home/db/foods"
+
+
+cat "$path"/.csv/foods.csv | sed '/^#/d' | sed '/^$/d' | sed '/uncooked/d' | csvlens
