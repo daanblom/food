@@ -2,7 +2,7 @@
 
 today=$(date '+%Y-%m-%d')
 
-source ./.env
+source ./.env || echo "No .env file found!"
 
 mkdir -p "$timelineDir"
 
@@ -10,6 +10,16 @@ if [[ ! -f "$statsFile" ]]; then
     printf "Food,Amount,Calories,Protein,Carbs,Fats\n" > "$statsFile"
 fi
 
+# Help menu
+
+showHelp () {
+  echo " Usage: $0 " && exit 1
+}
+
+if [[ "$1" == "-h" ]]; then
+    showHelp
+    exit 0
+fi
 # Color helper
 colorize() {
     pct=$1
@@ -192,13 +202,6 @@ printf "Water   : %sml\n" "$remWater"
 
 }
 
-# Help menu
-
-showHelp () {
-  echo"
-Usage: $0
-  "
-}
 
 # Flags
 case "$1" in
@@ -210,7 +213,5 @@ case "$1" in
 -b) showBars ;;
 
 *) showTotals ;;
-
--h) showHelp ;;
 
 esac
