@@ -14,15 +14,10 @@ if [[ ! -f "$statsFile" ]]; then
 fi
 
 # Help menu
-
 showHelp () {
   echo " Usage: $0 " && exit 1
 }
 
-if [[ "$1" == "-h" ]]; then
-    showHelp
-    exit 0
-fi
 # Color helper
 colorize() {
     pct=$1
@@ -208,13 +203,14 @@ printf "Water   : %sml\n" "$remWater"
 
 # Flags
 case "$1" in
+  -h) showHelp  && exit 0 ;;
 
--r) showRemaining ;;
+  -r) showRemaining ;;
 
--f) showTotals && echo && showRemaining ;;
+  -f) showTotals && echo && showRemaining ;;
 
--b) showBars ;;
+  -b) showBars ;;
 
-*) showTotals ;;
+  *) showTotals ;;
 
 esac
