@@ -62,24 +62,23 @@ progressBar() {
 }
 
 # Add entry
-if [[ "$1" == "-a" ]]; then
+addEntry () {
+  if [[ $# -ne 7 ]]; then
+  echo 'Usage: food -a "Food name" amount calories protein carbs fats'
+  exit 1
+  fi
 
-if [[ $# -ne 7 ]]; then
-echo 'Usage: food -a "Food name" amount calories protein carbs fats'
-exit 1
-fi
+  echo "$2,$3,$4,$5,$6,$7" >> "$statsFile"
 
-echo "$2,$3,$4,$5,$6,$7" >> "$statsFile"
-
-echo "Added: $2 ($3)"
-exit 0
-fi
+  echo "Added: $2 ($3)"
+  exit 0
+}
 
 # Edit today's file
-if [[ "$1" == "-e" ]]; then
-  $EDITOR $statsFile
-  exit 0
-fi
+editToday () {
+    $EDITOR $statsFile
+    exit 0
+}
 
 # List today's file
 if [[ "$1" == "-l" ]]; then
@@ -203,7 +202,11 @@ printf "Water   : %sml\n" "$remWater"
 
 # Flags
 case "$1" in
-  -h) showHelp  && exit 0 ;;
+  -h) showHelp && exit 0 ;;
+
+  -a) addEntry ;;
+
+  -e) editToday ;;
 
   -r) showRemaining ;;
 
