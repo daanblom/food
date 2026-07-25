@@ -82,7 +82,7 @@ editToday () {
 
 # List today's file
 if [[ "$1" == "-l" ]]; then
-  sed 's/ //g' $statsFile | csvlens
+  sed 's/ //g' $statsFile | "$csvViewer"
   exit 0
 fi
 
