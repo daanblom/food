@@ -2,15 +2,15 @@
 
 today=$(date '+%Y-%m-%d')
 
-if ! source ./.env 2>/dev/null; then
-    echo "No .env file found!"
-    exit 1
+if ! source $HOME/.config/food/.env 2>/dev/null; then
+  echo "No .env file found!"
+  exit 1
 fi
 
 mkdir -p "$timelineDir"
 
 if [[ ! -f "$statsFile" ]]; then
-    printf "Food,Amount,Calories,Protein,Carbs,Fats\n" > "$statsFile"
+  printf "Food,Amount,Calories,Protein,Carbs,Fats\n" > "$statsFile"
 fi
 
 # Help menu
@@ -20,45 +20,45 @@ showHelp () {
 
 # Color helper
 colorize() {
-    pct=$1
+  pct=$1
 
-    if (( $(echo "$pct < 50" | bc -l) )); then
-        color=31
-    elif (( $(echo "$pct < 90" | bc -l) )); then
-        color=33
-    else
-        color=32
-    fi
+  if (( $(echo "$pct < 50" | bc -l) )); then
+      color=31
+  elif (( $(echo "$pct < 90" | bc -l) )); then
+      color=33
+  else
+      color=32
+  fi
 
-    printf "\033[%sm(%.2f%%)\033[0m" "$color" "$pct"
+  printf "\033[%sm(%.2f%%)\033[0m" "$color" "$pct"
 }
 
 # Progress bar
 progressBar() {
-    pct=$1
-    width=20
+  pct=$1
+  width=20
 
-    # Keep visual bar capped at 100%
-    displayPct=$pct
-    if (( $(echo "$displayPct > 100" | bc -l) )); then
-        displayPct=100
-    fi
+  # Keep visual bar capped at 100%
+  displayPct=$pct
+  if (( $(echo "$displayPct > 100" | bc -l) )); then
+      displayPct=100
+  fi
 
-    filled=$(awk "BEGIN {printf \"%d\", ($displayPct/100)*$width}")
-    empty=$((width-filled))
+  filled=$(awk "BEGIN {printf \"%d\", ($displayPct/100)*$width}")
+  empty=$((width-filled))
 
-    bar=$(printf "%${filled}s" | tr " " "-")
-    space=$(printf "%${empty}s")
+  bar=$(printf "%${filled}s" | tr " " "-")
+  space=$(printf "%${empty}s")
 
-    if (( $(echo "$pct < 50" | bc -l) )); then
-        color=31
-    elif (( $(echo "$pct < 90" | bc -l) )); then
-        color=33
-    else
-        color=32
-    fi
+  if (( $(echo "$pct < 50" | bc -l) )); then
+      color=31
+  elif (( $(echo "$pct < 90" | bc -l) )); then
+      color=33
+  else
+      color=32
+  fi
 
-    printf "\033[%sm[%s%s] %.0f%%\033[0m" "$color" "$bar" "$space" "$pct"
+  printf "\033[%sm[%s%s] %.0f%%\033[0m" "$color" "$bar" "$space" "$pct"
 }
 
 # Add entry
@@ -76,8 +76,8 @@ addEntry () {
 
 # Edit today's file
 editToday () {
-    $EDITOR $statsFile
-    exit 0
+  $EDITOR $statsFile
+  exit 0
 }
 
 # List today's file
@@ -93,109 +93,109 @@ if [[ "$1" == "-i" ]]; then
 fi
 
 calcWater() {
-    awk -F',' '
-    NR > 1 {
-        food = $1
-        amount = $2
+  awk -F',' '
+  NR > 1 {
+      food = $1
+      amount = $2
 
-        gsub(/^ +| +$/, "", food)
-        gsub(/^ +| +$/, "", amount)
+      gsub(/^ +| +$/, "", food)
+      gsub(/^ +| +$/, "", amount)
 
-        if (tolower(food) == "water") {
-            gsub(/ml/i, "", amount)
-            gsub(/ /, "", amount)
-            total += amount
-        }
-    }
-    END {
-        printf "%.0f\n", total
-    }
-    ' "$statsFile"
+      if (tolower(food) == "water") {
+          gsub(/ml/i, "", amount)
+          gsub(/ /, "", amount)
+          total += amount
+      }
+  }
+  END {
+      printf "%.0f\n", total
+  }
+  ' "$statsFile"
 }
 
-# Calculate totals
-read -r totalCalories totalProtein totalCarbs totalFats < <(
-awk -F',' '
-NR>1{
-c+=$3
-p+=$4
-cb+=$5
-f+=$6
-}
-END{
-printf "%.1f %.1f %.1f %.1f\n",c,p,cb,f
-}
-' "$statsFile"
-)
+  # Calculate totals
+  read -r totalCalories totalProtein totalCarbs totalFats < <(
+  awk -F',' '
+  NR>1{
+  c+=$3
+  p+=$4
+  cb+=$5
+  f+=$6
+  }
+  END{
+  printf "%.1f %.1f %.1f %.1f\n",c,p,cb,f
+  }
+  ' "$statsFile"
+  )
 
-totalWater=$(calcWater)
-pctWater=$(awk "BEGIN {printf \"%.2f\",($totalWater*100)/$waterGoal}")
-remWater=$(awk "BEGIN {printf \"%.0f\",$waterGoal-$totalWater}")
+  totalWater=$(calcWater)
+  pctWater=$(awk "BEGIN {printf \"%.2f\",($totalWater*100)/$waterGoal}")
+  remWater=$(awk "BEGIN {printf \"%.0f\",$waterGoal-$totalWater}")
 
-# Percentages
-pctCalories=$(awk "BEGIN {printf \"%.2f\",($totalCalories*100)/$caloriesGoal}")
-pctProtein=$(awk "BEGIN {printf \"%.2f\",($totalProtein*100)/$proteinGoal}")
-pctCarbs=$(awk "BEGIN {printf \"%.2f\",($totalCarbs*100)/$carbsGoal}")
-pctFats=$(awk "BEGIN {printf \"%.2f\",($totalFats*100)/$fatsGoal}")
+  # Percentages
+  pctCalories=$(awk "BEGIN {printf \"%.2f\",($totalCalories*100)/$caloriesGoal}")
+  pctProtein=$(awk "BEGIN {printf \"%.2f\",($totalProtein*100)/$proteinGoal}")
+  pctCarbs=$(awk "BEGIN {printf \"%.2f\",($totalCarbs*100)/$carbsGoal}")
+  pctFats=$(awk "BEGIN {printf \"%.2f\",($totalFats*100)/$fatsGoal}")
 
-# Remaining
-remCalories=$(awk "BEGIN {printf \"%.1f\",$caloriesGoal-$totalCalories}")
-remProtein=$(awk "BEGIN {printf \"%.1f\",$proteinGoal-$totalProtein}")
-remCarbs=$(awk "BEGIN {printf \"%.1f\",$carbsGoal-$totalCarbs}")
-remFats=$(awk "BEGIN {printf \"%.1f\",$fatsGoal-$totalFats}")
+  # Remaining
+  remCalories=$(awk "BEGIN {printf \"%.1f\",$caloriesGoal-$totalCalories}")
+  remProtein=$(awk "BEGIN {printf \"%.1f\",$proteinGoal-$totalProtein}")
+  remCarbs=$(awk "BEGIN {printf \"%.1f\",$carbsGoal-$totalCarbs}")
+  remFats=$(awk "BEGIN {printf \"%.1f\",$fatsGoal-$totalFats}")
 
-# Output functions
-showTotals() {
+  # Output functions
+  showTotals() {
 
-printf "Calories: %.1f / %s %s\n" \
-"$totalCalories" "$caloriesGoal" "$(colorize "$pctCalories")"
+  printf "Calories: %.1f / %s %s\n" \
+  "$totalCalories" "$caloriesGoal" "$(colorize "$pctCalories")"
 
-printf "Protein : %.1f / %s %s\n" \
-"$totalProtein" "$proteinGoal" "$(colorize "$pctProtein")"
+  printf "Protein : %.1f / %s %s\n" \
+  "$totalProtein" "$proteinGoal" "$(colorize "$pctProtein")"
 
-printf "Carbs   : %.1f / %s %s\n" \
-"$totalCarbs" "$carbsGoal" "$(colorize "$pctCarbs")"
+  printf "Carbs   : %.1f / %s %s\n" \
+  "$totalCarbs" "$carbsGoal" "$(colorize "$pctCarbs")"
 
-printf "Fats    : %.1f / %s %s\n" \
-"$totalFats" "$fatsGoal" "$(colorize "$pctFats")"
+  printf "Fats    : %.1f / %s %s\n" \
+  "$totalFats" "$fatsGoal" "$(colorize "$pctFats")"
 
-printf "Water   : %s / %sml %s\n" \
-"$totalWater" "$waterGoal" "$(colorize "$pctWater")"
+  printf "Water   : %s / %sml %s\n" \
+  "$totalWater" "$waterGoal" "$(colorize "$pctWater")"
 
 }
 
 showBars() {
 
-printf "Calories "
-progressBar "$pctCalories"
-echo
+  printf "Calories "
+  progressBar "$pctCalories"
+  echo
 
-printf "Protein  "
-progressBar "$pctProtein"
-echo
+  printf "Protein  "
+  progressBar "$pctProtein"
+  echo
 
-printf "Carbs    "
-progressBar "$pctCarbs"
-echo
+  printf "Carbs    "
+  progressBar "$pctCarbs"
+  echo
 
-printf "Fats     "
-progressBar "$pctFats"
-echo
+  printf "Fats     "
+  progressBar "$pctFats"
+  echo
 
-printf "Water    "
-progressBar "$pctWater"
-echo
+  printf "Water    "
+  progressBar "$pctWater"
+  echo
 
 }
 
 showRemaining() {
 
-echo "Remaining:"
-printf "Calories: %s\n" "$remCalories"
-printf "Protein : %sg\n" "$remProtein"
-printf "Carbs   : %sg\n" "$remCarbs"
-printf "Fats    : %sg\n" "$remFats"
-printf "Water   : %sml\n" "$remWater"
+  echo "Remaining:"
+  printf "Calories: %s\n" "$remCalories"
+  printf "Protein : %sg\n" "$remProtein"
+  printf "Carbs   : %sg\n" "$remCarbs"
+  printf "Fats    : %sg\n" "$remFats"
+  printf "Water   : %sml\n" "$remWater"
 
 }
 
