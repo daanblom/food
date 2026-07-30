@@ -87,10 +87,13 @@ if [[ "$1" == "-l" ]]; then
 fi
 
 # Insert food from list
-if [[ "$1" == "-i" ]]; then
-  local entry="$(cat .csv/foods.csv |sed '/^$/d' | sed '/^#/d' | fzf)"
+addFromCsv () {
+  local entry="$(cat $path/.csv/foods.csv |sed '/^$/d' | sed '/^#/d' | fzf)"
+  local food="$(echo "$entry" | cut -d "," -f1 | sed 's/ /_/g')"
+  local stats="$(echo "$entry" | cut -d "," -f2- | sed 's/,/ /g')"
+  echo "$food" "$stats"
   exit 0
-fi
+}
 
 calcWater() {
   awk -F',' '
@@ -199,6 +202,21 @@ showRemaining() {
 
 }
 
+weeklyStats () {
+  local weekday=$(date +%u)
+  local weeklyCalories="$(($caloriesGoal * 7 | bc))"
+  local weeklyProteins="$(($proteinGoal * 7 | bc))"
+  local weeklyCarbs="$(($carbsGoal * 7 | bc))"
+  local weeklyFats="$(($fatsGoal * 7 | bc))"
+
+  for i in $(seq 1 $weekday); do
+    file "$i" || exit 1
+    local day=$(date -d "$today - $i days" "+%Y-%m-%d")
+    cat $path/.csv/timeline/$day.csv
+  done
+
+}
+
 
 # Flags
 case "$1" in
@@ -213,6 +231,10 @@ case "$1" in
   -f) showTotals && echo && showRemaining ;;
 
   -b) showBars ;;
+
+  -w) weeklyStats ;;
+
+  -i) addFromCsv ;;
 
   *) showTotals ;;
 
